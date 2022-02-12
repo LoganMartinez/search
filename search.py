@@ -106,7 +106,6 @@ def depthFirstSearch(problem):
                     stack.push((successorState, currentCost + successorCost, path + [(action, successorState)] ))
     (bestCost, bestPath) = best
     (actions, states) = unzip(bestPath)
-    print(actions.pop(0))
     return actions
       
 def unzip(lst):
