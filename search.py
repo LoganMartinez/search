@@ -105,7 +105,8 @@ def depthFirstSearch(problem):
                     visited.add(successorState)
                     stack.push((successorState, currentCost + successorCost, path + [(action, successorState)] ))
     (bestCost, bestPath) = best
-    (actions, states) = unzip(bestPath)
+    (actions, states) = unzip(bestPath) #do we need states?
+    actions.pop(0)
     return actions
       
 def unzip(lst):
