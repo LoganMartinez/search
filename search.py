@@ -108,40 +108,6 @@ def depthFirstSearch(problem):
     (actions, states) = unzip(bestPath)
     print(actions.pop(0))
     return actions
-
-    # currentState = problem.getStartState()
-    # stack = util.Stack()
-    # visited = set()
-    # visited.add(currentState)
-    # path = [] #[(action,cost)]
-    # bestPath = None
-    # while (not stack.isEmpty()) or (currentState == problem.getStartState()):
-    #     print(stack.list)
-    #     if problem.isGoalState(currentState): #found goal -- new bestPath?
-    #         cost = calculateCost(path)
-    #         if bestPath == None or cost < calculateCost(bestPath):
-    #             bestPath = path
-    #         #update path and currentstate
-    #     else:
-    #         successors = problem.getSuccessors(currentState)
-    #         if len(successors) == 0: #back track
-    #             path.pop()
-    #         else:
-    #             for (successorState, action, cost) in successors:
-    #                 if not successorState in visited:
-    #                     visited.add(successorState)
-    #                     stack.push((successorState, action, cost))
-    #             (currentState, action, cost) = stack.pop()
-    #             path.append((action, cost))
-    # (actions, costs) = unzip(bestPath)
-    # return actions
-
-#takes a path, which is a list of (action, cost) tuples, and calculates the sum of all the costs
-def calculateCost(path):
-    total = 0
-    for (action, cost) in path:
-        total += cost
-    return total
       
 def unzip(lst):
     xList = []
