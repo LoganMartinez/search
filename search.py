@@ -120,7 +120,23 @@ def unzip(lst):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    queue = util.Queue()
+    queue.push((startState, 0, ['None'])) #do we need cost?
+    visited = set()
+    visited.add(startState)
+    while not queue.isEmpty():
+        (currentState, currentCost, path) = queue.pop()
+        if problem.isGoalState(currentState):
+            path.pop(0)
+            return path
+        else:
+            successors = problem.getSuccessors(currentState)
+            for (successorState, action, cost) in successors:
+                if not successorState in visited:
+                    visited.add(successorState)
+                    queue.push((successorState, currentCost + cost, path + [action]))
+    return ['Stop']
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
