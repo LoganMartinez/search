@@ -89,54 +89,37 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     startState = problem.getStartState()
     stack = util.Stack()
-    stack.push((startState, 0, [('None', startState)]))
+    stack.push((startState, []))
     visited = set()
-    best = None #(bestCost, bestPath)
-    visited.add(startState)
-    while(not stack.isEmpty()):
-        currentState, currentCost, path = stack.pop()
+    while not stack.isEmpty():
+        (currentState, path) = stack.pop()
         if problem.isGoalState(currentState):
-            if best == None or best[1] > currentCost:
-                best = (currentCost, path)
+            return path 
         else:
-            successors = problem.getSuccessors(currentState)
-            for (successorState, action, successorCost) in successors:
-                if not successorState in visited:
-                    visited.add(successorState)
-                    stack.push((successorState, currentCost + successorCost, path + [(action, successorState)] ))
-    (bestCost, bestPath) = best
-    (actions, states) = unzip(bestPath) #do we need states?
-    actions.pop(0)
-    return actions
-      
-def unzip(lst):
-    xList = []
-    yList = []
-    for (x,y) in lst:
-        xList.append(x)
-        yList.append(y)
-    return (xList,yList)
+            if not currentState in visited:
+                visited.add(currentState)
+                successors = problem.getSuccessors(currentState)
+                for (successorState, action, successorCost) in successors:
+                    stack.push((successorState, path + [action]))
+    return ['Stop']
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     startState = problem.getStartState()
     queue = util.Queue()
-    queue.push((startState, 0, ['None'])) #do we need cost?
+    queue.push((startState, []))
     visited = set()
-    visited.add(startState)
     while not queue.isEmpty():
-        (currentState, currentCost, path) = queue.pop()
+        (currentState, path) = queue.pop()
         if problem.isGoalState(currentState):
-            path.pop(0)
             return path
         else:
-            successors = problem.getSuccessors(currentState)
-            for (successorState, action, cost) in successors:
-                if not successorState in visited:
-                    visited.add(successorState)
-                    queue.push((successorState, currentCost + cost, path + [action]))
-    return ['Stop']
+            if not currentState in visited:
+                visited.add(currentState)
+                successors = problem.getSuccessors(currentState)
+                for (successorState, action, successorCost) in successors:
+                    queue.push((successorState, path + [action]))
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
