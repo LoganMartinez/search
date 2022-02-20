@@ -295,14 +295,19 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (self.startingPosition, frozenset())
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        position, cornersVisited = state
+        visitedAll = True
+        for corner in self.corners:
+            if not corner in cornersVisited:
+                visitedAll = False
+        return visitedAll
 
     def getSuccessors(self, state):
         """
@@ -319,13 +324,23 @@ class CornersProblem(search.SearchProblem):
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            # x,y = currentPosition
+            # dx, dy = Actions.directionToVector(action)
+            # nextx, nexty = int(x + dx), int(y + dy)
+            # hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-
+            (x, y), cornersVisited = state
+            dx, dy = Actions.directionToVector(action)
+            nx, ny = int(x + dx), int(y + dy)
+            if not self.walls[nx][ny]:
+                if (nx,ny) in self.corners:
+                    mutableCornersVisited = list(cornersVisited)
+                    mutableCornersVisited.append((nx,ny))
+                    newCornersVisited = frozenset(mutableCornersVisited)
+                    successors.append((((nx,ny), newCornersVisited), action, 1))
+                else:
+                    successors.append((((nx,ny), cornersVisited), action, 1)) 
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
@@ -358,9 +373,8 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    return 0
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
