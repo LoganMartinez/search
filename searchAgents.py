@@ -295,6 +295,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        # state is (position, cornersVisited)
         return (self.startingPosition, frozenset())
 
     def isGoalState(self, state):
@@ -357,6 +358,17 @@ class CornersProblem(search.SearchProblem):
             if self.walls[x][y]: return 999999
         return len(actions)
 
+#given a position and a list of points, returns a tuple with the closest point and the manhatten distance between the two points
+def closestPointAndDist(position, points):
+    (x,y) = position
+    closestPoint = None
+    closestDist = None
+    for (pointX, pointY) in points:
+        manhattanDist = abs(x - pointX) + abs(y - pointY)
+        if closestDist == None or manhattanDist < closestDist:
+            closestPoint = (pointX, pointY)
+            closestDist = manhattanDist
+    return (closestPoint, closestDist)
 
 def cornersHeuristic(state, problem):
     """
@@ -374,7 +386,19 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
     "*** YOUR CODE HERE ***"
-    return 0
+    ret = 0
+    position, cornersVisited = state
+    cornersSet = set(corners)
+    cornersNotVisited = cornersSet.difference(cornersVisited)
+    while len(cornersNotVisited) > 0:
+        closestCorner, dist = closestPointAndDist(position, cornersNotVisited)
+        ret += dist
+        position = closestCorner
+        cornersNotVisited.remove(closestCorner)
+    return ret
+    
+    
+    
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
