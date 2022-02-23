@@ -107,7 +107,8 @@ def depthFirstSearch(problem):
             visitedNodes.append(currNode)
             if problem.isGoalState(currNode):
                 return moves
-            " after checking if current node is the goal state, generate children & push for exploration"
+            " after checking if current node is the goal state, generate children & push for exploration to fringe"
+            " update list of actions for search agents from next node (successor) from currNode, push child into fringe "
             for nextNode, move, cost in problem.getSuccessors(currNode):
                 updatedMoves = moves + [move]
                 fringe.push((nextNode, updatedMoves))
@@ -116,11 +117,59 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    " code doesn't really change, the only difference is that BFS uses util.Queue, which is FIFO, "
+    " thus changes the order that the nodes get pushed into the fringe from exploration"
+
+    rootNode = problem.getStartState()
+    fringe = util.Queue()
+    fringe.push((rootNode, []))
+    visitedNodes = []
+
+    if problem.isGoalState(rootNode):
+        return []
+    
+    while not fringe.isEmpty():
+        currNode, moves = fringe.pop()
+        if currNode not in visitedNodes:
+            visitedNodes.append(currNode)
+
+            if problem.isGoalState(currNode):
+                return moves
+            
+            for nextNode, move, cost in problem.getSuccessors(currNode):
+                updatedMoves = moves + [move]
+                fringe.push((nextNode, updatedMoves))
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    " similar to BFS and DFS code, except implementation with PQ"
+    " util.PriorityQueue stores PQ as (node, actions to get to currnode, cost to currnode), priority to currnode)"
+    
+    rootNode = problem.getStartState()
+    fringe = util.PriorityQueue()
+    fringe.push((rootNode, [], 0),0)
+    visitedNodes = []
+
+    if problem.isGoalState(rootNode):
+        return []
+    
+    while not fringe.isEmpty():
+        currNode, moves, totalcost = fringe.pop()
+        if currNode not in visitedNodes:
+            visitedNodes.append(currNode)
+
+            if problem.isGoalState(currNode):
+                return moves
+            
+            for nextNode, move, currcost in problem.getSuccessors(currNode):
+                updatedMoves = moves + [move]
+                newPriority = totalcost + currcost
+                fringe.push((nextNode, updatedMoves, newPriority), newPriority)
+
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
