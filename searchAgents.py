@@ -359,14 +359,15 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 #given a position and a list of points, returns a tuple with the closest point and the manhatten distance between the two points
-def closestPointAndDist(position, points):
+def closestPointAndDist(position, corners):
     (x,y) = position
     closestPoint = None
     closestDist = None
-    for (pointX, pointY) in points:
-        manhattanDist = abs(x - pointX) + abs(y - pointY)
+    for (cornerX, cornerY) in corners:
+        # manhattanDist = abs(x - cornerX) + abs(y - cornerY)
+        manhattanDist = util.manhattanDistance((x,y),(cornerX,cornerY))
         if closestDist == None or manhattanDist < closestDist:
-            closestPoint = (pointX, pointY)
+            closestPoint = (cornerX, cornerY)
             closestDist = manhattanDist
     return (closestPoint, closestDist)
 
