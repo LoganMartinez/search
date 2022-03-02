@@ -170,7 +170,6 @@ def uniformCostSearch(problem):
                 fringe.push((nextNode, updatedMoves, newPriority), newPriority)
 
 
-    util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -182,7 +181,28 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    rootNode = problem.getStartState()
+    fringe = util.PriorityQueue()
+    fringe.push((rootNode, [], 0),0)
+    visitedNodes = []
+
+    if problem.isGoalState(rootNode):
+        return []
+    
+    while not fringe.isEmpty():
+        currNode, moves, totalcost = fringe.pop()
+        if currNode not in visitedNodes:
+            visitedNodes.append(currNode)
+
+            if problem.isGoalState(currNode):
+                return moves
+            
+            for nextNode, move, currcost in problem.getSuccessors(currNode):
+                updatedMoves = moves + [move]
+                newPriority = totalcost + currcost
+                heuristicCost = newPriority + heuristic(nextNode,problem)
+                fringe.push((nextNode, updatedMoves, newPriority), heuristicCost)
+    
 
 
 # Abbreviations
